@@ -1,0 +1,20 @@
+{
+  "name": "project-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "lazy": "bin/lazy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "commander": "^2.19.0",
+    "inquirer": "^6.2.0"
+  }
+}

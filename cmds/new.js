@@ -1,10 +1,7 @@
 const inquirer = require('inquirer');
-const create = require('../utils/create');
 const chalk = require('chalk');
-const path = require('path');
 const figlet = require('figlet');
-const _npm = require('../utils/npmCmds');
-const CURR_DIR = process.cwd();
+const createApp = require('../templates/app').createApp;
 
 exports.newProject = async (name, args) => {
 
@@ -42,17 +39,18 @@ exports.newProject = async (name, args) => {
 
     // Ask the questions and return the answers
     const answers = await inquirer.prompt(questions, processAnswers);
-    console.log(answers)
 
-    // Create a folder with project name
-    await create.mkdir(name);
-
-    // cd into the project foler
-    await changeDirectory(name);
-
-    // execute npm init command inside project folder
-    await _npm.execute(['init', '-y']);
-
+    switch(answers.ProjectType) {
+        case 'App':
+            createApp(name);
+            break;
+        case 'Framework stack':
+            console.log('create framework');
+            break;
+        case 'Website (with CMS)':
+            console.log('create website');
+            break;
+    }
 }
 
 // get default project structure
@@ -60,15 +58,7 @@ const getDefault = (args) => {
     console.log('default project');
 }
 
-// Change directory
-const changeDirectory = (folder) => {
-    try {
-        process.chdir(`${folder}/`);
-    }
-    catch (err) {
-        console.log('chdir: ' + err);
-    }
-}
+
 
 // returns the answers for questions
 const processAnswers = (answers) => {

@@ -1,31 +1,23 @@
+const { spawn, exec } = require('child_process');
 const chalk = require('chalk');
 
 module.exports = {
-  execute: async function(args) {
-    // spawn shell to execute command (shell: true for windows)
-    const  child  = await spawn('npm', args, {shell: true});
+  init: async function() {
+      // spawn shell to execute command (shell: true for windows)
+      const  cmd  = await spawn('npm', ['init', '-y'], {shell: true});
 
-    // if it works show the data or init message
-    child.stdout.on('data', (data) => {
-      if(args.includes('init')) {
+       // if it works show the data or init message
+      cmd.stdout.on('data', (data) => {
         console.log(chalk.blue('creating: ') +  'package.json');
-<<<<<<< HEAD
-      } else {
-        const packages = args.slice(1, args.length -1);
-        packages.forEach(e => {
-          console.log(chalk.blue('installing: ') + `${e}` );          
-        });
-=======
->>>>>>> c6d35267502089d4846847a1a37cf17f9b435f37
-      }
-    });
-    child.stderr.on('error', (error) => {
-      console.error(`stderr: ${error}`);
-    });
+      });
+
+      cmd.stderr.on('error', (error) => {
+        console.error(`stderr: ${error}`);
+      });
   },
 
-  install: function(packages, opts){
-		if(packages.length == 0 || !packages || !packages.length){return Promise.reject("No packages found");}
+  install: async function(packages, opts) {
+		if(packages.length == 0 || !packages || !packages.length){return Promise.reject("No packages found")}
 		if(typeof packages == "string") packages = [packages];
 		if(!opts) opts = {};
 		const cmdString = "npm install " + packages.join(" ") + " "
@@ -36,24 +28,9 @@ module.exports = {
 		+ (opts.noOptional? " --no-optional":"")
 		+ (opts.ignoreScripts? " --ignore-scripts":"");
 
-		return new Promise(function(resolve, reject){
-			const cmd = spawn(cmdString, {shell: true}, (error, stdout, stderr) => {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(true);
-				}
-			});
-
-			if(opts.output) {
-				const consoleOutput = function(msg) {
-					console.log('npm: ' + msg);
-				};
-
-				cmd.stdout.on('data', consoleOutput);
-				cmd.stderr.on('data', consoleOutput);
-			}
-		});
+			const cmd = await spawn(cmdString, {shell: true});
+      cmd.stdout.on('data', data => console.log(data));
+      cmd.stderr.on('error', err => console.log(err));
 	},
 
 	uninstall: function(packages, opts){
@@ -121,3 +98,10 @@ module.exports = {
 		});
 	}
 }
+
+// else {
+//   const packages = args.slice(1, args.length -1);
+//   packages.forEach(e => {
+//     console.log(chalk.blue('installing: ') + `${e}` ); 
+//   });
+// }      

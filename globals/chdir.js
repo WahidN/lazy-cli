@@ -4,5 +4,6 @@ exports.changeDirectory = (folder) => {
         process.chdir(`${folder}/`);
     }
     catch (err) {
+        console.error('chdir: ' + err);
     }
 }

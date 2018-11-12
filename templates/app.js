@@ -10,23 +10,25 @@ exports.createApp = async (name, args) => {
     await cd(name);
 
     // execute npm init command inside project folder
-    await _npm.execute(['init', '-y']);
-    await _npm.execute(['install', 'webpack', 'webpack-dev-server', '--save-dev']);
+    await _npm.init();
+    await _npm.install(["webpack", "webpack-dev-server"], {
+        saveDev: true
+    });
 
     //create folders and files
         //src
-        await create.mkdir('src/');
-        await create.mkdir('src/js');
-        await create.mkdir('src/js/models');
-        await create.mkdir('src/js/views');
-        await create.mkdir('src/scss');
+    await create.mkdir('src/');
+    await create.mkdir('src/js');
+    await create.mkdir('src/js/models');
+    await create.mkdir('src/js/views');
+    await create.mkdir('src/scss');
 
-        // dist
-        await create.mkdir('dist/');
+    // dist
+    await create.mkdir('dist/');
 
-        //readme
-        await create.file('index.js');
-        await create.file('.gitignore');
-        await create.file('webpack.config.js');
-        await create.file('README.md', name);
+    //readme
+    await create.file('index.js');
+    await create.file('.gitignore');
+    await create.file('webpack.config.js');
+    await create.file('README.md', name);
 }

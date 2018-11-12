@@ -11,4 +11,15 @@ exports.createWebsite = async (name, args) => {
 
     // execute npm init command inside project folder
     await _npm.execute(['init', '-y']);
+
+    await _npm.install(['gulp-sass'], {
+        saveDev: true
+    })
+    .then(() => {
+        console.log('package installed');
+    })
+    .catch(() => {
+        console.error('error');
+    });
+    
 }

@@ -10,6 +10,11 @@ module.exports = {
     child.stdout.on('data', (data) => {
       if(args.includes('init')) {
         console.log(chalk.blue('creating: ') +  'package.json');
+      } else {
+        const packages = args.slice(1, args.length -1);
+        packages.forEach(e => {
+          console.log(chalk.blue('installing: ') + `${e}` );          
+        });
       }
     });
     child.stderr.on('error', (error) => {

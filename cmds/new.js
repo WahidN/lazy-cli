@@ -60,22 +60,7 @@ exports.newProject = async (name, args) => {
 
     // Ask the questions and return the answers
     const answers = await inquirer.prompt(questions, processAnswers);
-
-    switch(answers.ProjectType) {
-        case 'App':
-            createApp(name);
-            break;
-        case 'App with NodeJS back-end':
-            createStack(name);
-            break;
-        case 'Website':
-            const spinner = new Spinner('Creating website.. %s \n');
-            spinner.setSpinnerString('|/-\\');
-            spinner.start();
-             createWebsite(name);
-            spinner.stop();
-            break;
-    }
+    buildProjects(answers, name);
 }
 
 // get default project structure
@@ -83,7 +68,28 @@ const getDefault = (args) => {
     console.log('default project');
 }
 
-
+const buildProjects = async (answers, name) => {
+    let spinner;
+    switch(answers.ProjectType) {
+        case 'App':
+            spinner = new Spinner('Creating app.. %s \n');
+            spinner.setSpinnerString('|/-\\');
+            spinner.start();
+            await createApp(name);
+            spinner.stop();
+            break;
+        case 'App with NodeJS back-end':
+            await createStack(name);
+            break;
+        case 'Website':
+            spinner = new Spinner('Creating website.. %s \n');            
+            spinner.setSpinnerString('|/-\\');
+            spinner.start();
+            await createWebsite(name);
+            spinner.stop();
+            break;
+    }
+}
 
 // returns the answers for questions
 const processAnswers = (answers) => {

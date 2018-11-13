@@ -10,5 +10,5 @@ exports.createStack = async (name, args) => {
     await cd(name);
 
     // execute npm init command inside project folder
-    await _npm.init();
+    await _npm.execute('init', '-y');
 }

@@ -2,65 +2,31 @@ const { spawn, exec } = require('child_process');
 const chalk = require('chalk');
 
 module.exports = {
-  init: async function() {
-      // spawn shell to execute command (shell: true for windows)
-      const  cmd  = await spawn('npm', ['init', '-y'], {shell: true});
+  execute: async function(cmd, args, packages) {
 
-       // if it works show the data or init message
-      cmd.stdout.on('data', (data) => {
-        console.log(chalk.blue('creating: ') +  'package.json');
+	if(packages === null){packages = []};
+      // spawn shell to execute command (shell: true for windows)
+      const child = spawn('npm', [cmd, args, packages], {shell: true});
+
+       // show message on command
+      child.stdout.on('data', (data) => {
+		  switch(cmd) {
+			case 'init':
+				console.log(chalk.blue('creating: ') +  'package.json');
+				break;
+			case 'install':
+				console.log(data.toString())
+				packages.forEach(e => {
+					console.log(chalk.blue('installing: ') + `${e}` ); 
+				});
+			  	break;
+		  }
       });
 
-      cmd.stderr.on('error', (error) => {
+      child.stderr.on('error', (error) => {
         console.error(`stderr: ${error}`);
       });
   },
-
-  install: async function(packages, opts) {
-		if(packages.length == 0 || !packages || !packages.length){return Promise.reject("No packages found")}
-		if(typeof packages == "string") packages = [packages];
-		if(!opts) opts = {};
-		const cmdString = "npm install " + packages.join(" ") + " "
-		+ (opts.global ? " -g":"")
-		+ (opts.save   ? " --save":" --no-save")
-		+ (opts.saveDev? " --save-dev":"")
-		+ (opts.legacyBundling? " --legacy-bundling":"")
-		+ (opts.noOptional? " --no-optional":"")
-		+ (opts.ignoreScripts? " --ignore-scripts":"");
-
-			const cmd = await spawn(cmdString, {shell: true});
-      cmd.stdout.on('data', data => console.log(data));
-      cmd.stderr.on('error', err => console.log(err));
-	},
-
-	uninstall: function(packages, opts){
-		if(packages.length == 0 || !packages || !packages.length){return Promise.reject(new Error("No packages found"));}
-		if(typeof packages == "string") packages = [packages];
-		if(!opts) opts = {};
-		const cmdString = "npm uninstall " + packages.join(" ") + " "
-		+ (opts.global ? " -g":"")
-		+ (opts.save   ? " --save":" --no-save")
-		+ (opts.saveDev? " --saveDev":"");
-
-		return new Promise(function(resolve, reject){
-			const cmd = exec(cmdString, {cwd: opts.cwd?opts.cwd:"/"},(error, stdout, stderr) => {
-				if (error) {
-					reject(error);
-				} else {
-					resolve(true);
-				}
-			});
-
-			if(opts.output) {
-				const consoleOutput = function(msg) {
-					console.log('npm: ' + msg);
-				};
-
-				cmd.stdout.on('data', consoleOutput);
-				cmd.stderr.on('data', consoleOutput);
-			}
-		});
-	},
 
 	list:function(path){
 		let global = false;
@@ -98,10 +64,4 @@ module.exports = {
 		});
 	}
 }
-
-// else {
-//   const packages = args.slice(1, args.length -1);
-//   packages.forEach(e => {
-//     console.log(chalk.blue('installing: ') + `${e}` ); 
-//   });
-// }      
+    

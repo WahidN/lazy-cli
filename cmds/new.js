@@ -1,9 +1,9 @@
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const figlet = require('figlet');
-const createApp = require('../templates/app').createApp;
+const createApp = require('../templates/app/app').createApp;
 const createStack = require('../templates/stack').createStack;
-const createWebsite = require('../templates/website').createWebsite;
+const createWebsite = require('../templates/website/website').createWebsite;
 const Spinner = require('cli-spinner').Spinner;
 
 exports.newProject = async (name, args) => {

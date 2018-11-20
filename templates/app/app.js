@@ -11,22 +11,29 @@ exports.createApp = async (name, args) => {
 
     // execute npm init command inside project folder
     await _npm.execute('init', '-y');
-    await _npm.execute('install', '--save-dev', ['gulp']);
 
-    //create folders and files
-        //src
-    await create.mkdir('src/');
-    await create.mkdir('src/js');
-    await create.mkdir('src/js/models');
-    await create.mkdir('src/js/views');
-    await create.mkdir('src/scss');
+    // install dependencies
+    
 
-    // dist
-    await create.mkdir('dist/');
+    //create folders & files
+        //folders
+        await create.mkdir('src/');
+        await create.mkdir('src/js');
+        await create.mkdir('src/js/models');
+        await create.mkdir('src/js/views');
+        await create.mkdir('src/scss');
+        await create.mkdir('dist/');
+        await create.file('src/scss/style.scss');
 
-    //readme
-    await create.file('index.js');
-    await create.file('.gitignore');
-    await create.file('webpack.config.js');
-    await create.file('README.md', name);
+        //files
+        await create.file('src/index.html');
+        await create.file('src/js/app.js');
+        await create.file('src/js/config.js');
+        await create.file('.gitignore');
+        await create.file('webpack.dev.js');
+        await create.file('webpack.prod.js');
+        await create.file('webpack.settings.js');
+        await create.file('webpack.common.js');
+        await create.file('config.env');
+        await create.file('README.md', name);
 }

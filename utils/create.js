@@ -21,6 +21,15 @@ module.exports = {
         }catch (e){
             console.log("Cannot write file ", e);
         }
+    },
+
+    copy: (file, path) => {
+        try{
+            console.log(chalk.blue('copying: ') +  file);
+            fs.copyFile(file, path);
+        }catch (e){
+            console.log("Cannot write file ", e);
+        }
     }
     
 }

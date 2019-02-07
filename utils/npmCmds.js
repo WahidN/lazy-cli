@@ -1,25 +1,17 @@
-const { spawnSync, exec } = require('child_process');
+const spawn = require('child_process').spawn;
 const chalk = require('chalk');
 const Spinner = require('cli-spinner').Spinner;
 
 module.exports = {
-  execute: function(cmd, args, packages) {
-	if(packages === null){packages = []};
-	switch(cmd) {
-		case 'init':
-			spinner = new Spinner('setting up project.. %s \n');            
-			break;
-		case 'install':
-			spinner = new Spinner('installing packages.. %s \n'); 
-			break;
-	}
-	spinner.setSpinnerString('|/-\\');
+  install: function() {
+	let spinner = new Spinner(chalk.yellow('installing packages...'))
+	spinner.setSpinnerString(18);
 	spinner.start();
-	// spawn shell to execute command (shell: true for windows)
-	const child = spawnSync('npm', [cmd, args, packages], {shell: true});
-	spinner.stop();
-	child.stderr.on('error', (error) => {
-		console.error(`stderr: ${error}`);
+	let child = spawn('npm install', {shell: true});
+	child.on('exit', () => {
+		spinner.stop();
+		process.stdout.write('\n');
+  		console.log(chalk.bgGreen('Installing packages completed.. ✓'));
 	});
   },
 

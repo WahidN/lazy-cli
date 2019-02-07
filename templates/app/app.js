@@ -34,6 +34,6 @@ exports.createApp = async (name, args) => {
         create.makeFile('README.md', name);
 
         // install packages
-        _npm.execute('install');
+        _npm.install();
 
 }

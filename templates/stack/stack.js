@@ -4,11 +4,11 @@ const cd = require('../../globals/chdir').changeDirectory;
 
 exports.createStack = async (name, args) => {
     // Create a folder with project name
-    await create.mkdir(name);
+    create.mkdir(name);
 
     // cd into the project foler
-    await cd(name);
+    cd(name);
 
     // execute npm init command inside project folder
-    await _npm.execute('init', '-y');
+    _npm.install();
 }

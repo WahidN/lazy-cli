@@ -18,15 +18,13 @@ function makeFile(path, content) {
 function copyFile(file, newFile, name) {
     let data = fs.readFileSync(file, 'utf-8');
     if (name) {
-        data = data.replace('{{ projectname }}', name);
+        data = data.replace('{{ projectname }}', name.toLowerCase());
     }
     makeFile(newFile, data);
 }
 
 module.exports = {
-
     mkdir,
     makeFile,
     copyFile
-    
 }

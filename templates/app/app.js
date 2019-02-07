@@ -4,36 +4,36 @@ const cd = require('../../globals/chdir').changeDirectory;
 
 exports.createApp = async (name, args) => {
     // Create a folder with project name
-    await create.mkdir(name);
+    create.mkdir(name);
 
     // cd into the project foler
-    await cd(name);
+    cd(name);
 
-    // execute npm init command inside project folder
-    //await _npm.execute('init', '-y');
-
-    // install dependencies
-    
+    const templatePath = `${__dirname}`;
 
     //create folders & files
         //folders
-        await create.mkdir('src/');
-        await create.mkdir('src/js');
-        await create.mkdir('src/js/models');
-        await create.mkdir('src/js/views');
-        await create.mkdir('src/scss');
-        await create.mkdir('dist/');
-        await create.file('src/scss/style.scss');
+        create.mkdir('src/');
+        create.mkdir('src/js');
+        create.mkdir('src/js/models');
+        create.mkdir('src/js/views');
+        create.mkdir('src/scss');
+        create.mkdir('dist/');
 
         //files
-        await create.file('src/index.html');
-        await create.file('src/js/app.js');
-        await create.file('src/js/config.js');
-        await create.file('.gitignore');
-        await create.file('webpack.dev.js');
-        await create.file('webpack.prod.js');
-        await create.file('webpack.settings.js');
-        await create.file('webpack.common.js');
-        await create.file('config.env');
-        await create.file('README.md', name);
+        create.copyFile(`${templatePath}/package.json`, 'package.json', name);
+        create.copyFile(`${templatePath}/webpack.settings.js`, 'webpack.settings.js', name);
+        create.copyFile(`${templatePath}/webpack.prod.js`, 'webpack.prod.js');
+        create.copyFile(`${templatePath}/webpack.dev.js`, 'webpack.dev.js');
+        create.copyFile(`${templatePath}/webpack.common.js`, 'webpack.common.js');
+        create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
+        create.makeFile('src/scss/style.scss');
+        create.makeFile('src/js/app.js');
+        create.makeFile('src/js/config.js');
+        create.makeFile('.gitignore');
+        create.makeFile('README.md', name);
+
+        // install packages
+        _npm.execute('install');
+
 }

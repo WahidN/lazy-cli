@@ -1,31 +1,26 @@
-const { spawn, exec } = require('child_process');
+const { spawnSync, exec } = require('child_process');
 const chalk = require('chalk');
+const Spinner = require('cli-spinner').Spinner;
 
 module.exports = {
-  execute: async function(cmd, args, packages) {
-
+  execute: function(cmd, args, packages) {
 	if(packages === null){packages = []};
-      // spawn shell to execute command (shell: true for windows)
-      const child = spawn('npm', [cmd, args, packages], {shell: true});
-
-       // show message on command
-      child.stdout.on('data', (data) => {
-		  switch(cmd) {
-			case 'init':
-				console.log(chalk.blue('creating: ') +  'package.json');
-				break;
-			case 'install':
-				console.log(data.toString())
-				packages.forEach(e => {
-					console.log(chalk.blue('installing: ') + `${e}` ); 
-				});
-			  	break;
-		  }
-      });
-
-      child.stderr.on('error', (error) => {
-        console.error(`stderr: ${error}`);
-      });
+	switch(cmd) {
+		case 'init':
+			spinner = new Spinner('setting up project.. %s \n');            
+			break;
+		case 'install':
+			spinner = new Spinner('installing packages.. %s \n'); 
+			break;
+	}
+	spinner.setSpinnerString('|/-\\');
+	spinner.start();
+	// spawn shell to execute command (shell: true for windows)
+	const child = spawnSync('npm', [cmd, args, packages], {shell: true});
+	spinner.stop();
+	child.stderr.on('error', (error) => {
+		console.error(`stderr: ${error}`);
+	});
   },
 
 	list:function(path){

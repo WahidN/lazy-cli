@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const chalk = require('chalk');
 const figlet = require('figlet');
 const createApp = require('../templates/app/app').createApp;
-const createStack = require('../templates/stack').createStack;
+const createStack = require('../templates/stack/stack').createStack;
 const createWebsite = require('../templates/website/website').createWebsite;
 const Spinner = require('cli-spinner').Spinner;
 

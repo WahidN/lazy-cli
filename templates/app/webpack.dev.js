@@ -1,19 +1,22 @@
-// webpack.dev.js - developmental builds
-const LEGACY_CONFIG = 'legacy';
-const MODERN_CONFIG = 'modern';
-
-// node modules
 const merge = require('webpack-merge');
-const path = require('path');
-const sane = require('sane');
-const webpack = require('webpack');
+const baseConfig = require('./webpack.common.js');
 
-// webpack plugins
-const Dashboard = require('webpack-dashboard');
-const DashboardPlugin = require('webpack-dashboard/plugin');
-const dashboard = new Dashboard();
-
-// config files
-const common = require('./webpack.common.js');
-const pkg = require('./package.json');
-const settings = require('./webpack.settings.js');
+module.exports = merge(baseConfig, {
+    mode: 'development',
+    devtool: 'eval-source-map',
+    module: {
+        rules: [{
+            test: /\.tsx?$/,
+            loader: "babel-loader",
+            exclude: /node_modules/
+        }]
+    },
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 3000
+    },
+    plugins: [
+        new HardSourceWebpackPlugin()
+    ]
+});

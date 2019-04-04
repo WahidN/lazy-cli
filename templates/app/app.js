@@ -19,6 +19,7 @@ exports.createApp = async (name, args) => {
         create.mkdir('src/js/views');
         create.mkdir('src/scss');
         create.mkdir('dist/');
+        create.mkdir('templates/');
 
         //files
         create.copyFile(`${templatePath}/package.json`, 'package.json', name);
@@ -33,7 +34,23 @@ exports.createApp = async (name, args) => {
         create.makeFile('.gitignore');
         create.makeFile('README.md', name);
 
+        let packages;
+
+        packages = [
+            'webpack',
+            'webpack-cli',
+            'webpack-dev-server',
+            'webpack-merge',
+            '@babel/cli',
+            '@babel/core',
+            '@babel/node',
+            '@babel/preset-env',
+            'babel-loader',
+            'style-loader',
+            'css-loader'
+        ]
+
         // install packages
-        _npm.install();
+        _npm.command('npm install --save-dev', packages);
 
 }

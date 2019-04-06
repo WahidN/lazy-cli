@@ -2,55 +2,102 @@ const _npm = require('../../utils/npmCmds');
 const create = require('../../utils/create');
 const cd = require('../../globals/chdir').changeDirectory;
 
-exports.createApp = async (name, args) => {
+const createWebpack = (name, templatePath) => {
+    create.copyFile(`${templatePath}/package.json`, 'package.json', name);
+    create.mkdir('src/');
+    create.mkdir('src/js');
+    create.mkdir('src/js/models');
+    create.mkdir('src/js/views');
+    create.mkdir('src/scss');
+    create.mkdir('dist/');
+    create.copyFile(`${templatePath}/webpack.prod.js`, 'webpack.prod.js');
+    create.copyFile(`${templatePath}/webpack.dev.js`, 'webpack.dev.js');
+    create.copyFile(`${templatePath}/webpack.common.js`, 'webpack.common.js', name);
+    create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
+    create.makeFile('src/scss/style.scss');
+    create.makeFile('src/index.js');
+    create.makeFile('src/js/config.js');
+
+    const packages = [
+        'webpack',
+        'webpack-cli',
+        'webpack-dev-server',
+        'webpack-merge',
+        'workbox-webpack-plugin',
+        'html-webpack-plugin',
+        'clean-webpack-plugin',
+        'webpack-pwa-manifest',
+        'hard-source-webpack-plugin',
+        'uglifyjs-webpack-plugin',
+        '@babel/cli',
+        '@babel/core',
+        '@babel/node',
+        '@babel/preset-env',
+        'babel-loader',
+        'style-loader',
+        'css-loader',
+    ]
+     // install packages
+     _npm.command('npm install --save-dev', packages);
+}
+
+const createParcelJS = (name, path) => {
+
+}
+
+const createGulp = (name, path) => {
+    create.copyFile(`${path}/package.json`, 'package.json', name);
+    create.mkdir('src/');
+    create.mkdir('src/js');
+    create.mkdir('src/js/models');
+    create.mkdir('src/js/views');
+    create.mkdir('src/scss');
+    create.mkdir('dist/');
+    create.copyFile(`${path}/gulpfile.js`, 'gulpfile.js', name);
+    create.copyFile(`${path}/index.html`, 'src/index.html', name);
+    create.makeFile('src/scss/style.scss');
+    create.makeFile('src/index.js');
+    create.makeFile('src/js/config.js');
+
+
+    const packages = [
+        'gulp',
+        'del',
+        'gulp-sourcemaps',
+        'gulp-plumber',
+        'gulp-plumber',
+        'gulp-sass',
+        'gulp-autoprefixer',
+        'gulp-cssnano',
+        'gulp-babel',
+        'gulp-uglify',
+        'gulp-concat',
+        'gulp-imagemin',
+        'webpack-stream',
+        'browser-sync'
+    ]
+     // install packages
+     _npm.command('npm install --save-dev', packages);
+}
+
+exports.createApp = async (name, bundler) => {
     // Create a folder with project name
     create.mkdir(name);
-
     // cd into the project foler
     cd(name);
-
     const templatePath = `${__dirname}`;
-
-    //create folders & files
-        //folders
-        create.mkdir('src/');
-        create.mkdir('src/js');
-        create.mkdir('src/js/models');
-        create.mkdir('src/js/views');
-        create.mkdir('src/scss');
-        create.mkdir('dist/');
-        create.mkdir('templates/');
-
-        //files
-        create.copyFile(`${templatePath}/package.json`, 'package.json', name);
-        create.copyFile(`${templatePath}/webpack.settings.js`, 'webpack.settings.js', name);
-        create.copyFile(`${templatePath}/webpack.prod.js`, 'webpack.prod.js');
-        create.copyFile(`${templatePath}/webpack.dev.js`, 'webpack.dev.js');
-        create.copyFile(`${templatePath}/webpack.common.js`, 'webpack.common.js');
-        create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
-        create.makeFile('src/scss/style.scss');
-        create.makeFile('src/js/app.js');
-        create.makeFile('src/js/config.js');
-        create.makeFile('.gitignore');
-        create.makeFile('README.md', name);
-
-        let packages;
-
-        packages = [
-            'webpack',
-            'webpack-cli',
-            'webpack-dev-server',
-            'webpack-merge',
-            '@babel/cli',
-            '@babel/core',
-            '@babel/node',
-            '@babel/preset-env',
-            'babel-loader',
-            'style-loader',
-            'css-loader'
-        ]
-
-        // install packages
-        _npm.command('npm install --save-dev', packages);
-
+    // "npm init"
+    switch(bundler) {
+        case 'Webpack':
+            createWebpack(name, templatePath);
+            break;
+        case 'ParcelJS':
+            createParcelJS(name, templatePath);
+            break;
+        case 'Gulp':
+            createGulp(name, templatePath);
+            break;
+    }
+    create.makeFile('.gitignore');
+    create.makeFile('README.md', name);
 }

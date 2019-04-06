@@ -1,16 +1,20 @@
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.common.js');
+const path = require("path");
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 module.exports = merge(baseConfig, {
+    module: {
+        rules: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: ['eslint-loader']
+          }
+        ]
+    },
     mode: 'development',
     devtool: 'eval-source-map',
-    module: {
-        rules: [{
-            test: /\.tsx?$/,
-            loader: "babel-loader",
-            exclude: /node_modules/
-        }]
-    },
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
@@ -20,3 +24,5 @@ module.exports = merge(baseConfig, {
         new HardSourceWebpackPlugin()
     ]
 });
+
+

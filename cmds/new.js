@@ -31,9 +31,9 @@ exports.newProject = async (name, args) => {
         },
         {
             type: 'list', 
-            name: 'App framework', 
-            message: 'Do you want to use any of these frameworks?', 
-            choices: ['Angular', 'React', 'Vue', 'No, I dont need them'],
+            name: 'AppBundler', 
+            message: 'Which bundler/task runner do you want to use', 
+            choices: ['Webpack', 'ParcelJS', 'Gulp'],
             when: function(answers) {
                 return answers.ProjectType === 'App'
             }
@@ -55,7 +55,22 @@ exports.newProject = async (name, args) => {
             when: function(answers) {
                 return answers.ProjectType === 'Website'
             }
-        }  
+        },
+        {
+            type: 'list', 
+            name: 'eslint', 
+            message: 'Do you want to use ESLint?', 
+            choices: ['Yes', 'No']
+        },
+        {
+            type: 'list', 
+            name: 'eslintType', 
+            message: 'What do you want to use with ESlint?', 
+            choices: ['ESLint alone', 'ESLint + Prettifier'],
+            when: function(answers) {
+                return answers.eslint === 'Yes'
+            }
+        }
     ]
 
     // Ask the questions and return the answers
@@ -74,7 +89,7 @@ const buildProjects = async (answers, name) => {
         case 'App':
             spinner = new Spinner('Creating app.. %s \n');
             spinner.setSpinnerString('|/-\\');
-            await createApp(name);
+            await createApp(name, answers.AppBundler);
             break;
         case 'App with NodeJS back-end':
             await createStack(name);

@@ -3,12 +3,36 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require("path");
+const pkg = require('./package.json');
+
+const configureBabelLoader = (browserList) => {
+  return {
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: {
+          loader: 'babel-loader',
+          options: {
+              presets: [
+                  [
+                      '@babel/preset-env', {
+                      modules: false,
+                      useBuiltIns: 'entry',
+                      targets: {
+                          browsers: browserList,
+                      },
+                  }
+                  ],
+              ]
+          },
+      },
+  };
+};
 
 module.exports = {
-  entry: "./src/index.tsx",
+  entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].js"
+    filename: "app.js"
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".jsx"]
@@ -26,20 +50,20 @@ module.exports = {
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
         loader: "file-loader"
-      }
+      },
+      configureBabelLoader(Object.values(pkg.browserslist.legacyBrowsers))
     ]
   },
   plugins: [
-    new CleanPlugin(["dist"]),
+    new CleanPlugin(),
     new HtmlWebpackPlugin({
         filename: 'index.html',
-        title: 'Webpack Config',
+        title: '{{ projectname }}',
         template: './src/index.html',
     }),
     new WebpackPwaManifest({
-        name: 'Webpack Config',
-        short_name: 'WpConfig',
-        description: 'Example Webpack Config',
+        name: '{{ projectname }}',
+        description: 'PWA manifest',
         background_color: '#ffffff'
     }),
     new WorkboxPlugin.GenerateSW({
@@ -49,3 +73,5 @@ module.exports = {
     })
   ]
 };
+
+

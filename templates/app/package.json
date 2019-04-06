@@ -10,7 +10,7 @@
       "email": "someone@example-developer.com",
       "url": "https://github.com/example-developer/example-project/issues"
   },
-  "browser": "/web/index.html",
+  "browser": "/src/index.html",
   "repository": {
       "type": "git",
       "url": "git+https://github.com/example-developer/example-project.git"
@@ -18,7 +18,7 @@
     "main": "index.js",
     "scripts": {
       "dev": "webpack-dev-server --config webpack.dev.js",
-      "build": "webpack --config webpack.prod.js --progress --hide-modules"
+      "build": "webpack --config webpack.prod.js"
     },
     "license": "ISC",
     "browserslist": {

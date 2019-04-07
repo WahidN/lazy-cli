@@ -12,12 +12,12 @@ function mkdir(name) {
 
 function makeFile(path, content) {
     console.log(chalk.blue('creating: ') +  path);
-    fs.writeFileSync(path, content);
+    fs.writeFileSync(path, content = '');
 }
 
 function copyFile(file, newFile, name) {
     let data = fs.readFileSync(file, 'utf-8');
-    if (name) {
+    if (name !== undefined) {
         data = data.replace('{{ projectname }}', name.toLowerCase());
     }
     makeFile(newFile, data);

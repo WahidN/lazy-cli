@@ -14,9 +14,11 @@ const createWebpack = (name, templatePath) => {
     create.copyFile(`${templatePath}/webpack.dev.js`, 'webpack.dev.js');
     create.copyFile(`${templatePath}/webpack.common.js`, 'webpack.common.js', name);
     create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
-    create.makeFile('src/scss/style.scss');
+    create.copyFile(`${templatePath}/.eslintrc`, '.eslintrc');
+    create.makeFile('src/scss/style.scss', "require('./scss/style.scss')");
     create.makeFile('src/index.js');
     create.makeFile('src/js/config.js');
+    create.makeFile('favicon.ico');
 
     const packages = [
         'webpack',
@@ -29,6 +31,7 @@ const createWebpack = (name, templatePath) => {
         'webpack-pwa-manifest',
         'hard-source-webpack-plugin',
         'uglifyjs-webpack-plugin',
+        'mini-css-extract-plugin',
         '@babel/cli',
         '@babel/core',
         '@babel/node',
@@ -36,6 +39,10 @@ const createWebpack = (name, templatePath) => {
         'babel-loader',
         'style-loader',
         'css-loader',
+        'sass-loader',
+        'node-sass',
+        'eslint',
+        'eslint-loader'
     ]
      // install packages
      _npm.command('npm install --save-dev', packages);

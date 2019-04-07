@@ -2,6 +2,7 @@ const CleanPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require("path");
 const pkg = require('./package.json');
 
@@ -32,7 +33,7 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "app.js"
+    filename: "app.js",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".jsx"]
@@ -42,14 +43,18 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          {loader: "style-loader"},
+          {loader: "style-loader" },
           { loader: "css-loader", options: { importLoaders: 1 } },
           {loader: "sass-loader"}
         ]
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: "file-loader"
+        use: [
+          {
+          loader: "file-loader"
+          }
+        ]
       },
       configureBabelLoader(Object.values(pkg.browserslist.legacyBrowsers))
     ]
@@ -58,8 +63,9 @@ module.exports = {
     new CleanPlugin(),
     new HtmlWebpackPlugin({
         filename: 'index.html',
-        title: '{{ projectname }}',
+        title: 'trump-tweet-game',
         template: './src/index.html',
+        favicon: "./src/assets/img/favicon.png"
     }),
     new WebpackPwaManifest({
         name: '{{ projectname }}',
@@ -70,7 +76,10 @@ module.exports = {
         swDest: 'sw.js',
         clientsClaim: true,
         skipWaiting: true,
-    })
+    }),
+    new CopyWebpackPlugin([
+      {from:'src/assets/img',to:'assets/img'} 
+    ])
   ]
 };
 

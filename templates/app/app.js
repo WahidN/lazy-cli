@@ -5,20 +5,23 @@ const cd = require('../../globals/chdir').changeDirectory;
 const createWebpack = (name, templatePath) => {
     create.copyFile(`${templatePath}/package.json`, 'package.json', name);
     create.mkdir('src/');
+    create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
+    create.makeFile('src/index.js', "require('./scss/style.scss'");
     create.mkdir('src/js');
     create.mkdir('src/js/models');
     create.mkdir('src/js/views');
+    create.makeFile('src/js/config.js');
+    create.mkdir('src/assets');
+    create.mkdir('src/assets/img');
+    create.mkdir('src/assets/fonts');
     create.mkdir('src/scss');
+    create.makeFile('src/scss/style.scss');
     create.mkdir('dist/');
+    create.makeFile('favicon.ico');
     create.copyFile(`${templatePath}/webpack.prod.js`, 'webpack.prod.js');
     create.copyFile(`${templatePath}/webpack.dev.js`, 'webpack.dev.js');
     create.copyFile(`${templatePath}/webpack.common.js`, 'webpack.common.js', name);
-    create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
     create.copyFile(`${templatePath}/.eslintrc`, '.eslintrc');
-    create.makeFile('src/scss/style.scss', "require('./scss/style.scss')");
-    create.makeFile('src/index.js');
-    create.makeFile('src/js/config.js');
-    create.makeFile('favicon.ico');
 
     const packages = [
         'webpack',
@@ -42,7 +45,8 @@ const createWebpack = (name, templatePath) => {
         'sass-loader',
         'node-sass',
         'eslint',
-        'eslint-loader'
+        'eslint-loader',
+        'copy-webpack-plugin'
     ]
      // install packages
      _npm.command('npm install --save-dev', packages);

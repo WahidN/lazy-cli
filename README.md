@@ -6,3 +6,8 @@
 ```
 npm install -g lazy-cli
 ```
+
+## Usage ##
+```
+lazy new name-of-project
+```

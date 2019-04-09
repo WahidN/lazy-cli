@@ -89,7 +89,7 @@ const buildProjects = async (answers, name) => {
         case 'App':
             spinner = new Spinner('Creating app.. %s \n');
             spinner.setSpinnerString('|/-\\');
-            await createApp(name, answers.AppBundler);
+            await createApp(name, answers);
             break;
         case 'App with NodeJS back-end':
             await createStack(name);

@@ -2,8 +2,7 @@ const _npm = require('../../utils/npmCmds');
 const create = require('../../utils/create');
 const cd = require('../../globals/chdir').changeDirectory;
 
-const createWebpack = (name, templatePath) => {
-    create.copyFile(`${templatePath}/package.json`, 'package.json', name);
+const createWebpack = (name, templatePath, answers) => {
     create.mkdir('src/');
     create.copyFile(`${templatePath}/index.html`, 'src/index.html', name);
     create.makeFile('src/index.js', "require('./scss/style.scss'");
@@ -18,10 +17,10 @@ const createWebpack = (name, templatePath) => {
     create.makeFile('src/scss/style.scss');
     create.mkdir('dist/');
     create.makeFile('favicon.ico');
+    create.copyFile(`${templatePath}/package.json`, 'package.json', name);
     create.copyFile(`${templatePath}/webpack.prod.js`, 'webpack.prod.js');
     create.copyFile(`${templatePath}/webpack.dev.js`, 'webpack.dev.js');
     create.copyFile(`${templatePath}/webpack.common.js`, 'webpack.common.js', name);
-    create.copyFile(`${templatePath}/.eslintrc`, '.eslintrc');
 
     const packages = [
         'webpack',
@@ -44,10 +43,15 @@ const createWebpack = (name, templatePath) => {
         'css-loader',
         'sass-loader',
         'node-sass',
-        'eslint',
-        'eslint-loader',
-        'copy-webpack-plugin'
+        'copy-webpack-plugin',
+        'optimize-css-assets-webpack-plugin',
+        'critters-webpack-plugin'
     ]
+
+    if (answers.eslint === 'Yes') {
+        create.copyFile(`${templatePath}/.eslintrc`, '.eslintrc');
+        packages.push(['eslint', 'eslint-loader']);
+    }
      // install packages
      _npm.command('npm install --save-dev', packages);
 }
@@ -91,16 +95,18 @@ const createGulp = (name, path) => {
      _npm.command('npm install --save-dev', packages);
 }
 
-exports.createApp = async (name, bundler) => {
+exports.createApp = async (name, answers) => {
     // Create a folder with project name
     create.mkdir(name);
     // cd into the project foler
     cd(name);
     const templatePath = `${__dirname}`;
+    create.makeFile('.gitignore');
+    create.makeFile('README.md', name);
     // "npm init"
-    switch(bundler) {
+    switch(answers.AppBundler) {
         case 'Webpack':
-            createWebpack(name, templatePath);
+            createWebpack(name, templatePath, answers);
             break;
         case 'ParcelJS':
             createParcelJS(name, templatePath);
@@ -109,6 +115,4 @@ exports.createApp = async (name, bundler) => {
             createGulp(name, templatePath);
             break;
     }
-    create.makeFile('.gitignore');
-    create.makeFile('README.md', name);
 }

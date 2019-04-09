@@ -2,7 +2,7 @@ const CleanPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require("path");
 const pkg = require('./package.json');
 
@@ -41,14 +41,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.scss$/,
-        use: [
-          {loader: "style-loader" },
-          { loader: "css-loader", options: { importLoaders: 1 } },
-          {loader: "sass-loader"}
-        ]
-      },
-      {
         test: /\.(jpe?g|png|gif|svg)$/i,
         use: [
           {
@@ -63,9 +55,9 @@ module.exports = {
     new CleanPlugin(),
     new HtmlWebpackPlugin({
         filename: 'index.html',
-        title: 'trump-tweet-game',
+        title: '{{ projectname }}',
         template: './src/index.html',
-        favicon: "./src/assets/img/favicon.png"
+        favicon: "./src/assets/img/favicon.png",
     }),
     new WebpackPwaManifest({
         name: '{{ projectname }}',
@@ -79,8 +71,6 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       {from:'src/assets/img',to:'assets/img'} 
-    ])
+    ]),
   ]
 };
-
-

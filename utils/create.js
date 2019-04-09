@@ -10,9 +10,9 @@ function mkdir(name) {
     else { console.log('Folder already exists!')}   
 }
 
-function makeFile(path, content) {
+function makeFile(path, content = '') {
     console.log(chalk.blue('creating: ') +  path);
-    fs.writeFileSync(path, content = '');
+    fs.writeFileSync(path, content);
 }
 
 function copyFile(file, newFile, name) {

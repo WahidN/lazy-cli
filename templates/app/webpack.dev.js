@@ -10,6 +10,14 @@ module.exports = merge(baseConfig, {
             test: /\.js$/,
             exclude: /node_modules/,
             use: ['eslint-loader']
+          },
+          {
+            test: /\.scss$/,
+            use: [
+              {loader: "style-loader" },
+              { loader: "css-loader", options: { importLoaders: 1 } },
+              {loader: "sass-loader"}
+            ]
           }
         ]
     },
@@ -21,8 +29,6 @@ module.exports = merge(baseConfig, {
         port: 3000
     },
     plugins: [
-        new HardSourceWebpackPlugin()
+        new HardSourceWebpackPlugin(),
     ]
 });
-
-

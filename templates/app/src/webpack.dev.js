@@ -6,11 +6,7 @@ const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 module.exports = merge(baseConfig, {
     module: {
         rules: [
-          {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: ['eslint-loader']
-          },
+          {{ esLintString }}
           {
             test: /\.scss$/,
             use: [

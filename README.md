@@ -1,13 +1,13 @@
-# Lazy CLI # 
-## Fast project setup tool ##
+# Lazy CLI # `in beta` 
+> Fast project setup tool for fast development
 
 - - - -
-## Installation ##
+## Getting started ##
 ```
-npm install -g lazy-cli
+npm install -g @wahidn/lazy-cli
 ```
 
-## Usage ##
+## Create a project ##
 ```
 lazy new name-of-project
 ```

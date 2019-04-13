@@ -2,7 +2,7 @@ const _npm = require('../../utils/npmCmds');
 const create = require('../../utils/create');
 const cd = require('../../globals/chdir').changeDirectory;
 
-exports.createWebsite = async (name, args) => {
+exports.createWebsite = async (name, answers) => {
     // Create a folder with project name
     create.mkdir(name);
 

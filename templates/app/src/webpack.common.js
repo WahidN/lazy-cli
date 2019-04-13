@@ -57,7 +57,7 @@ module.exports = {
         filename: 'index.html',
         title: '{{ projectname }}',
         template: './src/index.html',
-        favicon: "./src/assets/img/favicon.png",
+        favicon: "./src/assets/img/favicon.ico",
     }),
     new WebpackPwaManifest({
         name: '{{ projectname }}',

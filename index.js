@@ -9,7 +9,6 @@ module.exports = () => {
         .command('new <name>')
         .alias('n')
         .description('Create new project')
-        .option('-d, --default', 'Pass default values')
         .action((name, args) => { _new.newProject(name, args)});
 
     program.parse(process.argv);

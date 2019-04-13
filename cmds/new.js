@@ -31,11 +31,20 @@ exports.newProject = async (name, args) => {
         },
         {
             type: 'list', 
+            name: 'appFramework', 
+            message: 'Do you want to use a framework?', 
+            choices: ['Angular', 'React', 'Vue', 'No, I dont need them'],
+            when: function(answers) {
+                return answers.ProjectType === 'App'
+            }
+        },
+        {
+            type: 'list', 
             name: 'AppBundler', 
             message: 'Which bundler/task runner do you want to use', 
             choices: ['Webpack', 'ParcelJS', 'Gulp'],
             when: function(answers) {
-                return answers.ProjectType === 'App'
+                return answers.appFramework === 'No, I dont need them'
             }
         },
         {
@@ -49,18 +58,39 @@ exports.newProject = async (name, args) => {
         },
         {
             type: 'list', 
-            name: 'website', 
-            message: 'Which CMS do you want to use', 
-            choices: ['Keystone', 'Apostrophe', 'Strapi', 'Netflify', 'No CMS needed'],
+            name: 'websiteType', 
+            message: 'Static or CMS driven website?', 
+            choices: ['Static', 'CMS'],
             when: function(answers) {
                 return answers.ProjectType === 'Website'
             }
         },
         {
             type: 'list', 
+            name: 'websiteCMS', 
+            message: 'Which CMS do you want to use', 
+            choices: ['Keystone', 'Apostrophe', 'Strapi', 'Netflify'],
+            when: function(answers) {
+                return answers.websiteType === 'CMS'
+            }
+        },
+        {
+            type: 'list', 
+            name: 'websiteTemplate', 
+            message: 'Which template engine would you like to use?', 
+            choices: ['Mustache', 'Handelbars', 'EJS', 'Nunjucks', 'None'],
+            when: function(answers) {
+                return answers.websiteType === 'Static'
+            }
+        },
+        {
+            type: 'list', 
             name: 'eslint', 
             message: 'Do you want to use ESLint?', 
-            choices: ['Yes', 'No']
+            choices: ['Yes', 'No'],
+            when: function(answers) {
+                return answers.AppBundler === 'Webpack' || answers.AppBundler === 'ParcelJS' || answers.AppBundler === 'Gulp'
+            }
         },
         {
             type: 'list', 
@@ -90,15 +120,24 @@ const buildProjects = async (answers, name) => {
             spinner = new Spinner('Creating app.. %s \n');
             spinner.setSpinnerString('|/-\\');
             await createApp(name, answers);
+            spinner.stop();
+            console.log(`\n`);
+            console.log(chalk.yellow(`🎉  Successfully created project ${name}.`));
+            console.log(chalk.yellow(`👉  cd ${name}`));
+            console.log(`\n`);
             break;
         case 'App with NodeJS back-end':
+            spinner = new Spinner('Creating Node app.. %s \n');            
+            spinner.setSpinnerString('|/-\\');
+            spinner.start();
             await createStack(name);
+            spinner.stop();
             break;
         case 'Website':
             spinner = new Spinner('Creating website.. %s \n');            
             spinner.setSpinnerString('|/-\\');
             spinner.start();
-            await createWebsite(name);
+            await createWebsite(name, answers);
             spinner.stop();
             break;
     }

@@ -1,8 +1,10 @@
-const CleanPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
 const path = require("path");
 const pkg = require('./package.json');
 
@@ -52,7 +54,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanPlugin(),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
         filename: 'index.html',
         title: '{{ projectname }}',
@@ -72,5 +74,18 @@ module.exports = {
     new CopyWebpackPlugin([
       {from:'src/assets/img',to:'assets/img'} 
     ]),
+    new CompressionPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.7
+    }),
+    new BrotliPlugin({
+      asset: '[path].br[query]',
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.7
+    })
   ]
 };

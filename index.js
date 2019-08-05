@@ -1,9 +1,9 @@
-const program = require('commander');
+const program = require("commander");
 const _new = require('./cmds/new');
 
 module.exports = () => {
     program
-        .version('1.0.0', '-v, --version');
+        .version('1.0.1', '-v, --version');
 
     program
         .command('new <name>')

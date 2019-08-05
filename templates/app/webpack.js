@@ -89,7 +89,9 @@ exports.createWebpack = (name, templatePath, answers) => {
             'node-sass',
             'copy-webpack-plugin',
             'optimize-css-assets-webpack-plugin',
-            'critters-webpack-plugin'
+            'critters-webpack-plugin',
+            'compression-webpack-plugin',
+            'brotli-webpack-plugin'
         ]
     
         let esLint;

@@ -27,9 +27,11 @@ exports.createGulp = (name, path, answers) => {
     create.mkdir('src/js/models');
     create.mkdir('src/js/views');
     create.mkdir('src/scss');
+    create.mkdir('src/images');
+    create.mkdir('src/views');
+    create.copyFile(`${path}/index.html`, 'src/views/index.html', {string: '{{ projectname }}', replaceString: name});
     create.mkdir('dist/');
     create.copyFile(`${path}/gulpfile.js`, 'gulpfile.js', {string: '{{ projectname }}', replaceString: name});
-    create.copyFile(`${path}/index.html`, 'src/index.html', {string: '{{ projectname }}', replaceString: name});
     create.makeFile('src/scss/style.scss');
     create.makeFile('src/index.js');
     create.makeFile('src/js/config.js');
@@ -49,7 +51,9 @@ exports.createGulp = (name, path, answers) => {
         'gulp-concat',
         'gulp-imagemin',
         'webpack-stream',
-        'browser-sync'
+        'browser-sync',
+        '@babel/core',
+        '@babel/preset-env',
     ]
      // install packages
      _npm.install('npm install --save-dev', packages);

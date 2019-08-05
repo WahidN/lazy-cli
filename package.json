@@ -16,7 +16,7 @@
   "devDependencies": {
     "chalk": "^2.4.1",
     "cli-spinner": "^0.2.8",
-    "commander": "^2.19.0",
+    "commander": "^2.20.0",
     "figlet": "^1.2.1",
     "inquirer": "^6.2.0"
   }

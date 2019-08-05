@@ -2,13 +2,64 @@ const _npm = require('../../utils/npmCmds');
 const create = require('../../utils/create');
 const cd = require('../../globals/chdir').changeDirectory;
 
-exports.createStack = async (name, args) => {
-    // Create a folder with project name
-    create.mkdir(name);
+const createNoFrameWorkApp = (name, answers) => {
+    return new Promise(async (resolve, reject) => {
+        // Create a folder with project name
+        create.mkdir(name);
+        // cd into the project foler
+        cd(name);
+        const templatePath = `${__dirname}/src`;
+        create.makeFile('.gitignore');
+        create.makeFile('README.md', {
+            string: '{{ projectname }}',
+            replaceString: name
+        });
 
-    // cd into the project foler
-    cd(name);
+        let app;
+        switch (answers.AppBundler) {
+            case 'Webpack':
+                app = await webpack(name, templatePath, answers);
+                break;
+            case 'ParcelJS':
+                app = await parcel(name, templatePath);
+                break;
+            case 'Gulp':
+                app = await gulp(name, templatePath, answers);
+                break;
+        }
 
-    // execute npm init command inside project folder
-    _npm.install();
+        resolve(app)
+    });
+}
+
+const createAngular = async (name) => {
+    await _npm.install('npm install -g', ['@angular/cli']);
+    await _npm.run(`ng new -style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Creating Angular app....`);
+}
+
+const createVue = async (name) => {
+    await _npm.install('npm install -g', ['@vue/cli']);
+    await _npm.run(`vue create --preset ${__dirname}/src/vuepreset.json  ${name.toLowerCase()}`, `Creating Vue app....`);
+}
+
+const createReact = async (name) => {
+    await _npm.install('npm install -g', ['create-react-app']);
+    await _npm.run(`npx create-react-app ${name.toLowerCase()}`, `Creating React app....`);
+}
+
+exports.createStack = async (name, answers) => {
+    switch(answers.appFramework) {
+        case 'No, I dont need them':
+            createNoFrameWorkApp(name, answers)
+            break;
+        case 'MEAN':
+            createAngular(name)
+            break;
+        case 'MEVN':
+            createVue(name)
+            break;
+        case 'MERN':
+            createReact(name)
+            break;
+    }
 }

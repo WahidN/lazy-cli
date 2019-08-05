@@ -130,8 +130,12 @@ const buildProjects = async (answers, name) => {
             spinner = new Spinner('Creating Node app.. %s \n');            
             spinner.setSpinnerString('|/-\\');
             spinner.start();
-            await createStack(name);
+            await createStack(name, answers);
             spinner.stop();
+            console.log(`\n`);
+            console.log(chalk.yellow(`🎉  Successfully created project ${name}.`));
+            console.log(chalk.yellow(`👉  cd ${name}`));
+            console.log(`\n`);
             break;
         case 'Website':
             spinner = new Spinner('Creating website.. %s \n');            

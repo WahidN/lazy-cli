@@ -24,7 +24,6 @@ const gulp                      = require('gulp'),
       browserSync               = require('browser-sync').create(),
 
       src_folder                = './src/',
-      src_assets_folder         = src_folder + 'assets/',
       dist_folder               = './dist/',
       dist_assets_folder        = dist_folder + 'assets/',
       node_modules_folder       = './node_modules/',
@@ -41,7 +40,7 @@ gulp.task('html', () => {
 
 gulp.task('sass', () => {
   return gulp.src([
-    src_assets_folder + 'scss/**/*.scss'
+    src_folder + 'scss/**/*.scss'
   ])
     .pipe(sourcemaps.init())
       .pipe(plumber())
@@ -56,7 +55,7 @@ gulp.task('sass', () => {
 });
 
 gulp.task('js', () => {
-  return gulp.src([ src_assets_folder + 'js/**/*.js' ])
+  return gulp.src([ src_folder + 'js/**/*.js' ])
     .pipe(plumber())
     .pipe(webpack({
       mode: 'production'
@@ -73,7 +72,7 @@ gulp.task('js', () => {
 });
 
 gulp.task('images', () => {
-  return gulp.src([ src_assets_folder + 'images/**/*.+(png|jpg|jpeg|gif|svg|ico)' ])
+  return gulp.src([ src_folder + 'images/**/*.+(png|jpg|jpeg|gif|svg|ico)' ])
     .pipe(plumber())
     .pipe(imagemin())
     .pipe(gulp.dest(dist_assets_folder + 'images'))
@@ -97,24 +96,17 @@ gulp.task('serve', () => {
 
 gulp.task('watch', () => {
   const watchImages = [
-    src_assets_folder + 'images/**/*.+(png|jpg|jpeg|gif|svg|ico)'
+    src_folder + 'images/**/*.+(png|jpg|jpeg|gif|svg|ico)'
   ];
-
-  const watchVendor = [];
-
-  node_dependencies.forEach(dependency => {
-    watchVendor.push(node_modules_folder + dependency + '/**/*.*');
-  });
 
   const watch = [
     src_folder + 'views/*.html',
-    src_assets_folder + 'scss/**/*.scss',
-    src_assets_folder + 'js/**/*.js'
+    src_folder + 'scss/**/*.scss',
+    src_folder + 'js/**/*.js'
   ];
 
   gulp.watch(watch, gulp.series('dev')).on('change', browserSync.reload);
   gulp.watch(watchImages, gulp.series('images')).on('change', browserSync.reload);
-  gulp.watch(watchVendor, gulp.series('vendor')).on('change', browserSync.reload);
 });
 
 gulp.task('default', gulp.series('build', gulp.parallel('serve', 'watch')));

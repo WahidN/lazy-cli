@@ -35,17 +35,17 @@ const createNoFrameWorkApp = (name, answers) => {
     });
 }
 
-const createAngular = (name) => {
+const createAngular = async (name) => {
     await _npm.install('npm install -g', ['@angular/cli']);
     await _npm.run(`ng new -style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Creating Angular app....`);
 }
 
-const createVue = (name) => {
+const createVue = async (name) => {
     await _npm.install('npm install -g', ['@vue/cli']);
     await _npm.run(`vue create --preset ${__dirname}/src/vuepreset.json  ${name.toLowerCase()}`, `Creating Vue app....`);
 }
 
-const createReact = (name) => {
+const createReact = async (name) => {
     await _npm.install('npm install -g', ['create-react-app']);
     await _npm.run(`npx create-react-app ${name.toLowerCase()}`, `Creating React app....`);
 }

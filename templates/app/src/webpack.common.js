@@ -75,14 +75,14 @@ module.exports = {
       {from:'src/assets/img',to:'assets/img'} 
     ]),
     new CompressionPlugin({
-      asset: '[path].gz[query]',
+      filename: '[path].gz[query]',
       algorithm: 'gzip',
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.7
     }),
     new BrotliPlugin({
-      asset: '[path].br[query]',
+      filename: '[path].br[query]',
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.7

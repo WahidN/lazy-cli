@@ -37,7 +37,7 @@ const createNoFrameWorkApp = (name, answers) => {
 
 const createAngular = async (name) => {
     await _npm.install('npm install -g', ['@angular/cli']);
-    await _npm.run(`ng new -style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Creating Angular app....`);
+    await _npm.run(`ng new --style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Creating Angular app....`);
 }
 
 const createVue = async (name) => {
@@ -51,20 +51,25 @@ const createReact = async (name) => {
 }
 
 const createApp = (name, answers) => {
-    switch(answers.appFramework) {
-        case 'No, I dont need them':
-            createNoFrameWorkApp(name, answers)
-            break;
-        case 'Angular':
-            createAngular(name)
-            break;
-        case 'Vue':
-            createVue(name)
-            break;
-        case 'React':
-            createReact(name)
-            break;
-    }
+    return new Promise(async (resolve, reject) => {
+        let app;
+        switch(answers.appFramework) {
+            case 'No, I dont need them':
+                app = createNoFrameWorkApp(name, answers)
+                break;
+            case 'Angular':
+                app = createAngular(name)
+                break;
+            case 'Vue':
+                app = createVue(name)
+                break;
+            case 'React':
+                app = createReact(name)
+                break;
+        }
+
+        resolve(app);
+    });
 }
 
 module.exports = {

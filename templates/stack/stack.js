@@ -1,65 +1,67 @@
-const _npm = require('../../utils/npmCmds');
-const create = require('../../utils/create');
+const createNode = require('./nodeapp').createNoFrameWorkApp;
+const createMEAN = require('./MEAN').createMEAN;
+const createMERN = require('./MERN').createMERN;
+const createMEVN = require('./MEVN').createMEVN;
+const create = require("../../utils/create");
 const cd = require('../../globals/chdir').changeDirectory;
 
-const createNoFrameWorkApp = (name, answers) => {
-    return new Promise(async (resolve, reject) => {
-        // Create a folder with project name
-        create.mkdir(name);
-        // cd into the project foler
-        cd(name);
-        const templatePath = `${__dirname}/src`;
-        create.makeFile('.gitignore');
-        create.makeFile('README.md', {
-            string: '{{ projectname }}',
-            replaceString: name
-        });
+const packageJson = name => {
+    return {
+        name: `${name.toLowerCase()}`,
+        version: "1.0.0",
+        keywords: [],
+        homepage: "https://github.com/example-developer/example-project",
+        browser: "/src/index.html",
+        repository: {
+            type: "git",
+            url: "git+https://github.com/example-developer/example-project.git"
+        },
+        main: "index.js",
+        scripts: {
+            start: "nodemon app.js"
+        },
+        license: "ISC",
+        devDependencies: {},
+        dependencies: {}
+    };
+};
 
+/**
+ * Create an node app project.
+ * @function
+ * @param {string} name - name of app.
+ * @param {object} answers - Answers given.
+ */
+exports.createNodeApp = async (name, answers) => {
+    // Create a folder with project name
+    create.mkdir(name);
+    // cd into the project foler
+    cd(name);
+    const templatePath = `${__dirname}/src`;
+    create.makeFile("package.json", `${JSON.stringify(packageJson(name))}`);
+    create.makeFile(".gitignore", "/node_modules");
+    create.makeFile("README.md", {
+        string: "{{ projectname }}",
+        replaceString: name
+    });
+
+    return new Promise(async (resolve, reject) => {
         let app;
-        switch (answers.AppBundler) {
-            case 'Webpack':
-                app = await webpack(name, templatePath, answers);
+
+        switch (answers.stack) {
+            case 'No, I dont need them':
+                app = createNode(name, answers, templatePath)
                 break;
-            case 'ParcelJS':
-                app = await parcel(name, templatePath);
+            case 'MEAN':
+                app = createMEAN(name)
                 break;
-            case 'Gulp':
-                app = await gulp(name, templatePath, answers);
+            case 'MEVN':
+                app = createMEVN(name)
+                break;
+            case 'MERN':
+                app = createMERN(name)
                 break;
         }
-
-        resolve(app)
+        resolve(app);
     });
-}
-
-const createAngular = async (name) => {
-    await _npm.install('npm install -g', ['@angular/cli']);
-    await _npm.run(`ng new -style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Creating Angular app....`);
-}
-
-const createVue = async (name) => {
-    await _npm.install('npm install -g', ['@vue/cli']);
-    await _npm.run(`vue create --preset ${__dirname}/src/vuepreset.json  ${name.toLowerCase()}`, `Creating Vue app....`);
-}
-
-const createReact = async (name) => {
-    await _npm.install('npm install -g', ['create-react-app']);
-    await _npm.run(`npx create-react-app ${name.toLowerCase()}`, `Creating React app....`);
-}
-
-exports.createStack = async (name, answers) => {
-    switch(answers.appFramework) {
-        case 'No, I dont need them':
-            createNoFrameWorkApp(name, answers)
-            break;
-        case 'MEAN':
-            createAngular(name)
-            break;
-        case 'MEVN':
-            createVue(name)
-            break;
-        case 'MERN':
-            createReact(name)
-            break;
-    }
 }

@@ -28,8 +28,7 @@ exports.newProject = async (name, args) => {
   }
 
   // questions
-  const questions = [
-    {
+  const questions = [{
       type: "list",
       name: "ProjectType",
       message: "What type of project do you want to set up?",
@@ -40,7 +39,7 @@ exports.newProject = async (name, args) => {
       name: "appFramework",
       message: "Do you want to use a framework?",
       choices: ["Angular", "React", "Vue", "No, I dont need them"],
-      when: function(answers) {
+      when: function (answers) {
         return answers.ProjectType === "App";
       }
     },
@@ -49,7 +48,7 @@ exports.newProject = async (name, args) => {
       name: "AppBundler",
       message: "Which bundler/task runner do you want to use",
       choices: ["Webpack", "ParcelJS", "Gulp"],
-      when: function(answers) {
+      when: function (answers) {
         return answers.appFramework === "No, I dont need them";
       }
     },
@@ -58,7 +57,7 @@ exports.newProject = async (name, args) => {
       name: "stack",
       message: "Do you want to use a stack?",
       choices: ["MERN", "MEAN", "MEVN", "No, I dont need them"],
-      when: function(answers) {
+      when: function (answers) {
         return answers.ProjectType === "NodeJS App";
       }
     },
@@ -67,7 +66,7 @@ exports.newProject = async (name, args) => {
       name: "websiteType",
       message: "How do you want to create a website?",
       choices: ["With Strapi", "With Netlify CMS", "With Craft CMS"],
-      when: function(answers) {
+      when: function (answers) {
         return answers.ProjectType === "Website";
       }
     },
@@ -76,7 +75,7 @@ exports.newProject = async (name, args) => {
       name: "websiteTemplate",
       message: "Which template engine would you like to use?",
       choices: ["Mustache", "Handelbars", "EJS", "Nunjucks", "None"],
-      when: function(answers) {
+      when: function (answers) {
         return answers.websiteType === "Static";
       }
     }
@@ -106,22 +105,18 @@ const buildProjects = async (answers, name) => {
   switch (answers.ProjectType) {
     case "App":
       await createApp(name, answers);
-      console.log(`\n`);
-      console.log(chalk.yellow(`🎉  Successfully created project ${name}.`));
-      console.log(chalk.yellow(`👉  cd ${name}`));
-      console.log(`\n`);
       break;
     case "NodeJS App":
       await createNodeApp(name, answers);
-      console.log(`\n`);
-      console.log(chalk.yellow(`🎉  Successfully created project ${name}.`));
-      console.log(chalk.yellow(`👉  cd ${name}`));
-      console.log(`\n`);
       break;
     case "Website":
       await createWebsite(name, answers);
       break;
   }
+  process.stdout.write('\033c');
+  console.log(chalk.yellow(`🎉  Successfully created website ${name}.`));
+  console.log(chalk.yellow(`👉  cd ${name}`));
+  console.log(`\n`);
 };
 
 // returns the answers for questions

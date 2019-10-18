@@ -12,12 +12,22 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
-    "chalk": "^2.4.1",
-    "cli-spinner": "^0.2.8",
+  "dependencies": {
     "commander": "^2.20.0",
+    "chalk": "^2.4.1",
+    "cli-spinner": "^0.2.8"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "eslint-config-node": "^4.0.0",
+    "eslint-plugin-node": "^10.0.0",
     "figlet": "^1.2.1",
-    "inquirer": "^6.2.0"
+    "inquirer": "^6.2.0",
+    "nodemon": "^1.19.3"
   }
 }

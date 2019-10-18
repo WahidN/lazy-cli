@@ -1,6 +1,28 @@
 const _npm = require("../../utils/npmCmds");
 const create = require("../../utils/create");
 
+
+const packageJson = name => {
+    return {
+        name: `${name.toLowerCase()}`,
+        version: "1.0.0",
+        keywords: [],
+        homepage: "https://github.com/example-developer/example-project",
+        browser: "/src/index.html",
+        repository: {
+            type: "git",
+            url: "git+https://github.com/example-developer/example-project.git"
+        },
+        main: "index.js",
+        scripts: {
+            start: "nodemon app.js"
+        },
+        license: "ISC",
+        devDependencies: {},
+        dependencies: {}
+    };
+};
+
 /**
  * Create an node app project without framework.
  * @function
@@ -8,9 +30,16 @@ const create = require("../../utils/create");
  * @param {object} answers - Answers given.
  */
 
-exports.createNoFrameWorkApp = (name, answers, templatePath) => {
+exports.createNoFrameWorkApp = (name, answers) => {
     return new Promise(async (resolve, reject) => {
         //reject(new Error("Something went wrong!"))
+        const templatePath = `${__dirname}/src`;
+        create.makeFile("package.json", `${JSON.stringify(packageJson(name))}`);
+        create.makeFile(".gitignore", "/node_modules");
+        create.makeFile("README.md", {
+            string: "{{ projectname }}",
+            replaceString: name
+        });
 
         create.copyFile(`${templatePath}/app.js`, "app.js");
         create.mkdir("routes");

@@ -1,5 +1,5 @@
-const program = require("commander");
-const _new = require('./cmds/new');
+const program = require('commander');
+const start = require('./cmds/new');
 
 module.exports = () => {
     program
@@ -9,7 +9,9 @@ module.exports = () => {
         .command('new <name>')
         .alias('n')
         .description('Create new project')
-        .action((name, args) => { _new.newProject(name, args)});
+        .action((name, args) => {
+            start.newProject(name, args);
+        });
 
     program.parse(process.argv);
-}
+};

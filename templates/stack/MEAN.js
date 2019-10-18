@@ -1,65 +1,42 @@
-const _npm = require('../../utils/npmCmds');
+const _npm = require("../../utils/npmCmds");
+const create = require("../../utils/create");
+const cd = require("../../globals/chdir").changeDirectory;
+const createNode = require("./nodeapp").createNoFrameWorkApp;
 
-const packageJson = (name) => {
-    return {
-        "name": `${name.toLowerCase()}`,
-        "version": "1.0.0",
-        "keywords": [],
-        "homepage": "https://github.com/example-developer/example-project",
-        "browser": "/src/index.html",
-        "repository": {
-            "type": "git",
-            "url": "git+https://github.com/example-developer/example-project.git"
-        },
-        "scripts": {},
-        "license": "ISC",
-        "devDependencies": {},
-        "dependencies": {}
-    }
-}
-
-const setupNode = () => {
+const setupNode = async name => {
     return new Promise(async (resolve, reject) => {
-        //reject(new Error("Something went wrong!"))
+        create.mkdir("server");
+        cd("server");
 
-        create.copyFile(`${templatePath}/app.js`, "app.js");
-        create.mkdir("routes");
-        create.mkdir("controllers");
-        create.mkdir("models");
-        create.mkdir("middleware");
-        create.mkdir("views");
-        create.mkdir("utils");
-        create.mkdir("images");
-        create.mkdir("public");
-        create.mkdir("public/css");
-        create.mkdir("public/js");
-
-        const packages = ["express", "mongodb", "mongoose", "body-parser", "ejs"];
-
-        await _npm.install("npm install", packages);
-
-        const endInstall = await _npm.run("npm install nodemon --save-dev", 'Installing nodemon...');
-
-        resolve(endInstall);
+        const node = await createNode(name);
+        resolve(node);
     });
-}
+};
 
-const setupApp = () => {
-    await _npm.install('npm install -g', ['@angular/cli']);
-    await _npm.run(`ng new -style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Installing Angular....`);
-}
+const setupApp = async name => {
+    return new Promise(async (resolve, reject) => {
+        cd("..");
+        create.mkdir("app");
+        cd("app");
+        await _npm.install("npm install -g", ["@angular/cli"]);
+        const angular = await _npm.run(
+            `ng new -style=sass --routing=true --interactive=false rapp`,
+            `Installing Angular....`
+        );
+        resolve(angular);
+    });
+};
 
 /**
  * Create an MEAN app.
  * @function
  * @param {string} name - name of app.
  */
-exports.createMEAN = async (name) => {
+exports.createMEAN = async name => {
     return new Promise(async (resolve, reject) => {
-
-        await setupNode();
-        const app = await setupApp();
+        await setupNode(name);
+        const app = await setupApp(name);
 
         resolve(app);
     });
-}
+};

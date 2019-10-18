@@ -3,7 +3,9 @@ const cd = require('../../globals/chdir').changeDirectory;
 const webpack = require('./webpack/webpack').createWebpack;
 const gulp = require('./gulp/gulp').createGulp;
 const parcel = require('./parceljs/parcel').createParcelJS;
-const _npm = require('../../utils/npmCmds');
+const {
+    npm,
+} = require('../../utils/npmCmds');
 
 /**
  * Create an App project with no framework.
@@ -19,7 +21,7 @@ const createNoFrameWorkApp = (name, answers) => {
         create.makeFile('.gitignore');
         create.makeFile('README.md', {
             string: '{{ projectname }}',
-            replaceString: name
+            replaceString: name,
         });
 
         let app;
@@ -33,42 +35,52 @@ const createNoFrameWorkApp = (name, answers) => {
             case 'Gulp':
                 app = await gulp(name, templatePath, answers);
                 break;
+            default:
+                break;
         }
 
-        resolve(app)
+        resolve(app);
     });
-}
+};
 
 /**
  * Create an Angular app.
  * @function
  * @param {string} name - name of app.
  */
-const createAngular = async (name) => {
-    await _npm.install('npm install -g', ['@angular/cli']);
-    await _npm.run(`ng new --style=sass --routing=true --interactive=false ${name.toLowerCase()}`, `Creating Angular app....`);
-}
+const createAngular = async name => {
+    await npm.install('npm install -g', ['@angular/cli']);
+    await npm.run(
+        `ng new --style=sass --routing=true --interactive=false ${name.toLowerCase()}`,
+        'Creating Angular app....'
+    );
+};
 
 /**
  * Create a Vue app.
  * @function
  * @param {string} name - name of app.
  */
-const createVue = async (name) => {
-    await _npm.install('npm install -g', ['@vue/cli']);
-    await _npm.run(`vue create --preset ${__dirname}/src/vuepreset.json  ${name.toLowerCase()}`, `Creating Vue app....`);
-}
+const createVue = async name => {
+    await npm.install('npm install -g', ['@vue/cli']);
+    await npm.run(
+        `vue create --preset ${__dirname}/vuepreset.json  ${name.toLowerCase()}`,
+        'Creating Vue app....'
+    );
+};
 
 /**
  * Create a React app.
  * @function
  * @param {string} name - name of app.
  */
-const createReact = async (name) => {
-    await _npm.install('npm install -g', ['create-react-app']);
-    await _npm.run(`npx create-react-app ${name.toLowerCase()}`, `Creating React app....`);
-}
-
+const createReact = async name => {
+    await npm.install('npm install -g', ['create-react-app']);
+    await npm.run(
+        `npx create-react-app ${name.toLowerCase()}`,
+        'Creating React app....'
+    );
+};
 
 /**
  * Create an app project.
@@ -81,23 +93,23 @@ const createApp = (name, answers) => {
         let app;
         switch (answers.appFramework) {
             case 'No, I dont need them':
-                app = createNoFrameWorkApp(name, answers)
+                app = createNoFrameWorkApp(name, answers);
                 break;
             case 'Angular':
-                app = createAngular(name)
+                app = createAngular(name);
                 break;
             case 'Vue':
-                app = createVue(name)
+                app = createVue(name);
                 break;
             case 'React':
-                app = createReact(name)
+                app = createReact(name);
                 break;
         }
 
         resolve(app);
     });
-}
+};
 
 module.exports = {
     createApp
-}
+};

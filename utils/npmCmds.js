@@ -1,8 +1,10 @@
 const {
-	spawn
+	spawn,
 } = require('child_process');
 const chalk = require('chalk');
-const Spinner = require('cli-spinner').Spinner;
+const {
+	Spinner,
+} = require('cli-spinner');
 
 /**
  * Spawn a child process in command line to install packages.
@@ -10,13 +12,19 @@ const Spinner = require('cli-spinner').Spinner;
  * @param {string} cmd - The name of the command e.g. install or init.
  * @param {array} packages - An array of packages to install.
  */
-const install = (cmd, packages) => {
-	return new Promise(async (resolve, reject) => {
-		let spinner = new Spinner(chalk.blue('installing packages...'))
+const install = async (cmd, packages) => {
+	const child = await spawn(cmd, packages, {
+		shell: true,
+	});
+	return new Promise((resolve, reject) => {
+
 		spinner.setSpinnerString(18);
 		spinner.start();
-		const child = await spawn(cmd, packages, {
-			shell: true
+
+
+		child.stdout.on('data', (data) => {
+			console.log('\n');
+			console.log(data.toString());
 		});
 
 		child.on('close', () => {
@@ -29,32 +37,37 @@ const install = (cmd, packages) => {
 		child.on('error', (err) => {
 			reject(err);
 		});
-	})
-}
+	});
+};
 
 /**
- * Spawn a command line shell to use npm.
+ * Spawn a child to use npm commands.
  * @function
- * @param {string} cmd - The name of the command e.g. install or init.
- * @param {string} message - Message to show 
+ * @param {object} args - Arguments passed for options.
  */
-const run = (cmd, message) => {
-	return new Promise(async (resolve, reject) => {
-		let spinner = new Spinner(chalk.blue(message))
-		spinner.setSpinnerString(18);
-		spinner.start();
-		let execChild = await spawn(cmd, [], {
-			shell: true
-		})
-
-		execChild.on('close', () => {
-			spinner.stop();
-			resolve(execChild);
+const npm = async (args) => {
+	const spinner = new Spinner(chalk.blue(args.message));
+	spinner.start();
+	const child = await spawn(args.command, args.packages, {
+		shell: true,
+	});
+	return new Promise((resolve, reject) => {
+		child.on('error', (err) => {
+			reject(err);
 		});
-	})
-}
+		child.stdout.on('data', (data) => {
+			console.log('\n');
+			console.log(data.toString());
+		});
+		child.on('close', () => {
+			spinner.stop();
+			process.stdout.write('\n');
+			console.log(chalk.green.bgBlack(args.messageComplete));
+			resolve(child);
+		});
+	});
+};
 
 module.exports = {
-	install,
-	run
-}
+	npm,
+};

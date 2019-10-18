@@ -7,13 +7,11 @@ const chalk = require('chalk');
  * @param {string} name - name of the folder.
  */
 function mkdir(name) {
-    if (!fs.existsSync(name)) {
-        console.log(chalk.blue('creating: ') + name);
-        fs.mkdirSync(name)
-        return `${__dirname}/${name}`;
-    } else {
-        console.log('Folder already exists!')
-    }
+    if (fs.existsSync(name)) console.log('Folder already exits!');
+
+    console.log(chalk.blue('creating: ') + name);
+    fs.mkdirSync(name);
+    return `${__dirname}/${name}`;
 }
 
 /**
@@ -45,5 +43,5 @@ function copyFile(file, newFile, dataObject) {
 module.exports = {
     mkdir,
     makeFile,
-    copyFile
+    copyFile,
 }

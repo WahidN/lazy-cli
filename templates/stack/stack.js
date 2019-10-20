@@ -1,9 +1,19 @@
-const createNode = require('./nodeapp').createNoFrameWorkApp;
-const createMEAN = require('./MEAN').createMEAN;
-const createMERN = require('./MERN').createMERN;
-const createMEVN = require('./MEVN').createMEVN;
+const {
+    createNode,
+} = require('./nodeapp');
+const {
+    createMEAN,
+} = require('./MEAN');
+const {
+    createMERN,
+} = require('./MERN');
+const {
+    createMEVN,
+} = require('./MEVN');
 const create = require("../../utils/create");
-const cd = require('../../globals/chdir').changeDirectory;
+const {
+    changeDirectory,
+} = require('../../globals/chdir');
 
 /**
  * Create an node app project.
@@ -15,25 +25,27 @@ exports.createNodeApp = async (name, answers) => {
     // Create a folder with project name
     create.mkdir(name);
     // cd into the project foler
-    cd(name);
+    changeDirectory(name);
 
     return new Promise(async (resolve, reject) => {
         let app;
 
         switch (answers.stack) {
             case 'No, I dont need them':
-                app = createNode(name, answers)
+                app = createNode(name, answers);
                 break;
             case 'MEAN':
-                app = createMEAN(name)
+                app = createMEAN(name);
                 break;
             case 'MEVN':
-                app = createMEVN(name)
+                app = createMEVN(name);
                 break;
             case 'MERN':
-                app = createMERN(name)
+                app = createMERN(name);
+                break;
+            default:
                 break;
         }
         resolve(app);
     });
-}
+};

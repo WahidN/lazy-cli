@@ -1,4 +1,6 @@
-const _npm = require('../../../utils/npmCmds');
+const {
+    npm
+} = require('../../../utils/npmCmds');
 const create = require('../../../utils/create');
 
 const packageJson = (name) => {
@@ -104,7 +106,12 @@ exports.createWebpack = (name, templatePath, answers) => {
         });
         create.copyFile(`${templatePath}/webpack/webpack.dev.js`, 'webpack.dev.js');
         // install packages
-        const npmInstall = await _npm.install('npm install --save-dev', packages);
+        const npmInstall = await npm({
+            command: 'npm install --save-dev',
+            packages: packages,
+            message: 'Installing packages',
+            messageComplete: 'packages installed!'
+        });
 
         resolve(npmInstall);
     });

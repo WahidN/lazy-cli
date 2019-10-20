@@ -1,4 +1,6 @@
-const _npm = require('../../../utils/npmCmds');
+const {
+    npm,
+} = require('../../../utils/npmCmds');
 const create = require('../../../utils/create');
 
 /**
@@ -44,19 +46,19 @@ exports.createGulp = (name, path, answers) => {
         create.mkdir('src/views');
         create.copyFile(`${path}/gulp/index.html`, 'src/index.html', {
             string: '{{ projectname }}',
-            replaceString: name
+            replaceString: name,
         });
         create.mkdir('dist/');
         create.copyFile(`${path}/gulp/gulpfile.js`, 'gulpfile.js', {
             string: '{{ projectname }}',
-            replaceString: name
+            replaceString: name,
         });
         create.makeFile('src/scss/style.scss');
         create.makeFile('src/index.js');
         create.makeFile('src/js/config.js');
 
 
-        const packages = [
+        const packagesToInstall = [
             'gulp',
             'del',
             'gulp-sourcemaps',
@@ -73,9 +75,15 @@ exports.createGulp = (name, path, answers) => {
             'browser-sync',
             '@babel/core',
             '@babel/preset-env',
-        ]
+        ];
         // install packages
-        const npmInstall = await _npm.install('npm install --save-dev', packages);
+        const npmInstall = await npm.install({
+            command: 'npm install --save-dev',
+            packages: packagesToInstall,
+            message: 'Installing packages...',
+            messageComplete: 'Installing packages completed!',
+        });
+
         resolve(npmInstall);
     });
-}
+};

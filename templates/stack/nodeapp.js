@@ -1,8 +1,10 @@
-const _npm = require("../../utils/npmCmds");
+const {
+    npm,
+} = require("../../utils/npmCmds");
 const create = require("../../utils/create");
 
 
-const packageJson = name => {
+const packageJson = (name) => {
     return {
         name: `${name.toLowerCase()}`,
         version: "1.0.0",
@@ -13,7 +15,7 @@ const packageJson = name => {
             type: "git",
             url: "git+https://github.com/example-developer/example-project.git"
         },
-        main: "index.js",
+        main: "app.js",
         scripts: {
             start: "nodemon app.js"
         },
@@ -30,15 +32,14 @@ const packageJson = name => {
  * @param {object} answers - Answers given.
  */
 
-exports.createNoFrameWorkApp = (name, answers) => {
+exports.createNode = (name, answers) => {
     return new Promise(async (resolve, reject) => {
-        //reject(new Error("Something went wrong!"))
         const templatePath = `${__dirname}/src`;
         create.makeFile("package.json", `${JSON.stringify(packageJson(name))}`);
         create.makeFile(".gitignore", "/node_modules");
         create.makeFile("README.md", {
             string: "{{ projectname }}",
-            replaceString: name
+            replaceString: name,
         });
 
         create.copyFile(`${templatePath}/app.js`, "app.js");
@@ -53,11 +54,21 @@ exports.createNoFrameWorkApp = (name, answers) => {
         create.mkdir("public/css");
         create.mkdir("public/js");
 
-        const packages = ["express", "mongodb", "mongoose", "body-parser", "ejs"];
+        const packagesToInstall = ["express", "mongodb", "mongoose", "body-parser", "ejs"];
 
-        await _npm.install("npm install", packages);
+        await npm({
+            command: 'npm install',
+            packages: packagesToInstall,
+            message: 'Installing packages...',
+            messageComplete: 'Installing packages complete!',
+        });
 
-        const endInstall = await _npm.run("npm install nodemon --save-dev", 'Installing nodemon...');
+        const endInstall = await npm({
+            command: 'npm install nodemon --save-dev',
+            packages: [],
+            message: 'Installing nodemon...',
+            messageComplete: 'Install complete!',
+        });
 
         resolve(endInstall);
     });

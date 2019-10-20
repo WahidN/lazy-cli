@@ -5,6 +5,7 @@ const chalk = require('chalk');
  * Creates a folder.
  * @function
  * @param {string} name - name of the folder.
+ * @returns folder
  */
 function mkdir(name) {
     if (fs.existsSync(name)) console.log('Folder already exits!');

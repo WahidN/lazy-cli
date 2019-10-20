@@ -1,9 +1,11 @@
-const _npm = require('../../../utils/npmCmds');
+const {
+    npm,
+} = require('../../../utils/npmCmds');
 const create = require('../../../utils/create');
 
-const packageJson = (name) => {
+const packageJson = (projectName) => {
     return {
-        "name": `${name.toLowerCase()}`,
+        "name": `${projectName.toLowerCase()}`,
         "version": "1.0.0",
         "keywords": [],
         "homepage": "https://github.com/example-developer/example-project",
@@ -41,21 +43,31 @@ exports.createParcelJS = (name, path) => {
         create.mkdir('src/views');
         create.copyFile(`${path}/parceljs/index.html`, 'index.html', {
             string: '{{ projectname }}',
-            replaceString: name
+            replaceString: name,
         });
         create.copyFile(`${path}/parceljs/main.js`, 'main.js');
         create.mkdir('dist/');
         create.makeFile('src/scss/styles.scss');
         create.makeFile('src/js/config.js');
 
-        await _npm.run(`npm i -g parcel-bundler`, `Installing Parcel....`);
+        await npm({
+            command: 'npm i -g parcel-bundler',
+            packages: [],
+            message: 'Installing ParcelJS',
+            messageComplete: '',
+        });
 
-        const packages = [
-            'sass'
-        ]
+        const packagesToInstall = [
+            'sass',
+        ];
         // install packages
-        const npmInstall = await _npm.install('npm install --save-dev', packages);
+        const npmInstall = await npm({
+            command: 'npm i --save-dev',
+            packages: packagesToInstall,
+            message: 'Installing packages',
+            messageComplete: 'Installing packages completed!',
+        });
 
         resolve(npmInstall);
     });
-}
+};

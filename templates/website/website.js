@@ -1,8 +1,10 @@
-const _npm = require('../../utils/npmCmds');
+const {
+    npm,
+} = require('../../utils/npmCmds');
 const create = require('../../utils/create');
 const cd = require('../../globals/chdir').changeDirectory;
 
-const packageJson = name => {
+const packageJson = (name) => {
     return {
         name: `${name.toLowerCase()}`,
         version: "1.0.0",
@@ -19,26 +21,50 @@ const packageJson = name => {
         },
         license: "ISC",
         devDependencies: {},
-        dependencies: {}
+        dependencies: {},
     };
 };
 
 exports.createWebsite = async (name, answers) => {
-    // Create a folder with project name
     create.mkdir(name);
-
-    // cd into the project foler
     cd(name);
 
-    // execute npm init command inside project folder
-    const templatePath = `${__dirname}/src`;
-    create.makeFile("package.json", `${JSON.stringify(packageJson(name))}`);
-    create.makeFile(".gitignore", "/node_modules");
-    create.makeFile("README.md", {
-        string: "{{ projectname }}",
-        replaceString: name
-    });
-
-    await _npm.install("npm install", ['netlify-cli']);
-    await _npm.run(`netlify init`, `Creating Netlify website....`);
-}
+    switch (answers.websiteType) {
+        case 'Strapi':
+            await npm({
+                command: `npx create-strapi-app . --quickstart`,
+                packages: [],
+                message: 'Create Strapi website...',
+                messageComplete: 'Done',
+            });
+            break;
+        case 'NextJS':
+            await npm({
+                command: `npx create-next-app .`,
+                packages: [],
+                message: 'Create NextJS app...',
+                messageComplete: 'Done',
+            });
+            break;
+        case 'Gatsby':
+            await npm({
+                command: `npm install -g gatsby-cli`,
+                packages: [],
+                message: 'Installing Gatsby...',
+                messageComplete: 'Done',
+            });
+            await npm({
+                command: `gatsby new . https://github.com/gatsbyjs/gatsby-starter-hello-world`,
+                packages: [],
+                message: 'Creating Gatsby project...',
+                messageComplete: 'Done',
+            });
+            break;
+        case 'Keystone CMS':
+            console.log('Not available yet!');
+            break;
+        default:
+            console.error('Project doesnt exists!');
+            break;
+    }
+};

@@ -5,6 +5,11 @@ const createApp = require("../templates/app/app").createApp;
 const createNodeApp = require("../templates/stack/stack").createNodeApp;
 const createWebsite = require("../templates/website/website").createWebsite;
 
+// returns the answers for questions
+const processAnswers = (answers) => {
+  return answers;
+};
+
 /**
  * Starts new project.
  * @function
@@ -65,7 +70,7 @@ exports.newProject = async (name, args) => {
       type: "list",
       name: "websiteType",
       message: "How do you want to create a website?",
-      choices: ["With Strapi", "With Netlify CMS", "With Craft CMS"],
+      choices: ["Strapi", 'NextJS', 'Gatsby'],
       when: function (answers) {
         return answers.ProjectType === "Website";
       }
@@ -76,7 +81,7 @@ exports.newProject = async (name, args) => {
       message: "Which template engine would you like to use?",
       choices: ["Mustache", "Handelbars", "EJS", "Nunjucks", "None"],
       when: function (answers) {
-        return answers.websiteType === "Static";
+        return answers.websiteType === "Static website";
       }
     }
   ];
@@ -91,7 +96,7 @@ exports.newProject = async (name, args) => {
  * @function
  * @param {array} args - arguments
  */
-const getDefault = args => {
+const getDefault = (args) => {
   console.log("default project");
 };
 
@@ -102,6 +107,7 @@ const getDefault = args => {
  * @param {string} name - name of project.
  */
 const buildProjects = async (answers, name) => {
+
   switch (answers.ProjectType) {
     case "App":
       await createApp(name, answers);
@@ -112,14 +118,12 @@ const buildProjects = async (answers, name) => {
     case "Website":
       await createWebsite(name, answers);
       break;
+    default:
+      break;
   }
+
   process.stdout.write('\033c');
   console.log(chalk.yellow(`🎉  Successfully created website ${name}.`));
   console.log(chalk.yellow(`👉  cd ${name}`));
   console.log(`\n`);
-};
-
-// returns the answers for questions
-const processAnswers = answers => {
-  return answers;
 };

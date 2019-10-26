@@ -3,7 +3,7 @@ const start = require('./cmds/new');
 
 module.exports = () => {
     program
-        .version('1.0.2', '-v, --version');
+        .version('1.0.4', '-v, --version');
 
     program
         .command('new <name>')

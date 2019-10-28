@@ -92,7 +92,7 @@ const createReact = async (name) => {
 	await npm({
 		command: 'npm install -g',
 		packages: ['create-react-app'],
-		message: 'Installing Reacht',
+		message: 'Installing React',
 		messageComplete: 'React installed',
 	});
 	await npm({
@@ -100,6 +100,29 @@ const createReact = async (name) => {
 		packages: [],
 		message: 'Creating React app...',
 		messageComplete: 'Done!',
+	});
+};
+
+/**
+ * Create a Svelte app.
+ * @function
+ * @param {string} name - name of app.
+ */
+const createSvelte = async (name) => {
+	await npm({
+		command: `npx degit sveltejs/template ${name}`,
+		packages: [],
+		message: 'Creating Svelte Project...',
+		messageComplete: 'Svelte project done!',
+	});
+
+	cd(name);
+
+	await npm({
+		command: `npm install`,
+		packages: [],
+		message: 'Installing packages...',
+		messageComplete: '',
 	});
 };
 
@@ -124,6 +147,9 @@ const createApp = (name, answers) => {
 				break;
 			case 'React':
 				app = createReact(name);
+				break;
+			case 'Svelte':
+				app = createSvelte(name);
 				break;
 			default:
 				return;

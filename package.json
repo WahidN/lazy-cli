@@ -1,6 +1,6 @@
 {
   "name": "@wahidn/lazy-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,6 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "eslint-config-node": "^4.0.0",
-    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-node": "^10.0.0"
   }
 }

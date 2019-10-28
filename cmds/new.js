@@ -43,7 +43,7 @@ exports.newProject = async (name, args) => {
       type: "list",
       name: "appFramework",
       message: "Do you want to use a framework?",
-      choices: ["Angular", "React", "Vue", "No, I dont need them"],
+      choices: ["Angular", "React", "Vue", "Svelte", "No, I dont need them"],
       when: function (answers) {
         return answers.ProjectType === "App";
       }
